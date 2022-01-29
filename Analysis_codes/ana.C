@@ -18,8 +18,8 @@ void ana(int sample=1)
   
   if(sample==1){
     //Add one file to chain. This is the input file.
-    //chain->Add("/home/work/ykumar/Samples/2016/ZZTo4L_20UL16_nanoAODv9_MC/*");
-    chain->Add("/home/work/ykumar/Samples/2016/ZZTo4L_20UL16_nanoAODv9_MC/1F555B22-8D51-134A-9A22-56EBBB62A9E6.root");
+    chain->Add("/home/work/ykumar/Samples/2016/ZZTo4L_20UL16_nanoAODv9_MC/*");
+    //chain->Add("/home/work/ykumar/Samples/2016/ZZTo4L_20UL16_nanoAODv9_MC/1F555B22-8D51-134A-9A22-56EBBB62A9E6.root");
     //Set names of output files.
     hstfilename = "/home/work/ykumar/ZZ_Analysis/hst_files/hst_ZZ.root";
     sumfilename = "/home/work/ykumar/ZZ_Analysis/hst_files/sum_ZZ.txt";

@@ -130,11 +130,18 @@ void ovlStack()
   TString datafile = "/home/bowerbird/Yash/Work/ZZ_Analysis/hst_files/Set3/hst_data.root";*/
 
   //First declare the file names:SET4
-  TString zzfile   = "/home/bowerbird/Yash/Work/ZZ_Analysis/hst_files/Set4/hst_ZZ.root";
+  /*TString zzfile   = "/home/bowerbird/Yash/Work/ZZ_Analysis/hst_files/Set4/hst_ZZ.root";
   TString ttzfile  = "/home/bowerbird/Yash/Work/ZZ_Analysis/hst_files/Set4/hst_TTZ.root";
   TString ttwfile  = "/home/bowerbird/Yash/Work/ZZ_Analysis/hst_files/Set4/hst_TTW.root";
   TString wzfile   = "/home/bowerbird/Yash/Work/ZZ_Analysis/hst_files/Set4/hst_WZ.root";
-  TString datafile = "/home/bowerbird/Yash/Work/ZZ_Analysis/hst_files/Set4/hst_data.root";
+  TString datafile = "/home/bowerbird/Yash/Work/ZZ_Analysis/hst_files/Set4/hst_data.root";*/
+
+  //First declare the file names:SET5
+  TString zzfile   = "/home/bowerbird/Yash/Work/ZZ_Analysis/hst_files/Set5/hst_ZZ.root";
+  TString ttzfile  = "/home/bowerbird/Yash/Work/ZZ_Analysis/hst_files/Set5/hst_TTZ.root";
+  TString ttwfile  = "/home/bowerbird/Yash/Work/ZZ_Analysis/hst_files/Set5/hst_TTW.root";
+  TString wzfile   = "/home/bowerbird/Yash/Work/ZZ_Analysis/hst_files/Set5/hst_WZ.root";
+  TString datafile = "/home/bowerbird/Yash/Work/ZZ_Analysis/hst_files/Set5/hst_data.root";
 
   //Luminosity(num, xsex) = Number of events / (production cross-section *1000)
   float zzlumi  = luminosity(17733356,13.74)/1000;
@@ -170,7 +177,7 @@ void ovlStack()
   /*****************************************
    *              4 Muons                  *
    *****************************************/
-  //TString chplots[9] = {"rA_mu_pT1","rA_mu_pT2","rA_mu_pT3","rA_mu_pT4","rA_mu_NbJets","rA_mu_MET_pT","rA_mu_PuppiMET_pT","rA_mu_DiMuonInvariantMass_ChosenPairing","rA_mu_QuadMuon_Mass"};
+  TString chplots[9] = {"rA_mu_pT1","rA_mu_pT2","rA_mu_pT3","rA_mu_pT4","rA_mu_NbJets","rA_mu_MET_pT","rA_mu_PuppiMET_pT","rA_mu_DiMuonInvariantMass_ChosenPairing","rA_mu_QuadMuon_Mass"};
   //TString chplots[9] = {"rB_mu_pT1","rB_mu_pT2","rB_mu_pT3","rB_mu_pT4","rB_mu_NbJets","rB_mu_MET_pT","rB_mu_PuppiMET_pT","rB_mu_DiMuonInvariantMass_ChosenPairing","rB_mu_QuadMuon_Mass"};
   //TString chplots[9] = {"rC_mu_pT1","rC_mu_pT2","rC_mu_pT3","rC_mu_pT4","rC_mu_NbJets","rC_mu_MET_pT","rC_mu_PuppiMET_pT","rC_mu_DiMuonInvariantMass_ChosenPairing","rC_mu_QuadMuon_Mass"};
 
@@ -182,19 +189,19 @@ void ovlStack()
   /*****************************************
    *              Combined 4L              *
    *****************************************/
-  TString chplots[4] = {"NbJets_4L","MET_4L","PuppiMET_4L","DiMuonInvMass_4L"};
+  //TString chplots[4] = {"NbJets_4L","MET_4L","PuppiMET_4L","DiMuonInvMass_4L"};
   
   TString ytitle = "Entries"; // Or "Events"
-  //TString xtitle[9] = {"pT1","pT2","pT3","pT4","NbJets","MET_pT","PuppiMET_pT","DiMuonInvariantMass_ChosenPairing","DualZ_Mass"};
-  //TString xtitle[9] = {"pT1_Muon","pT2_Muon","pT1_Electron","pT2_Electron","NbJets","MET_pT","PuppiMET_pT","DileptonInvariantMass","QuadleptonMass_Mass"};
-  TString xtitle[4] = {"NbJets_4L","MET_4L","PuppiMET_4L","DileptonInvariantMass_4L"};
+  TString xtitle[9] = {"pT1","pT2","pT3","pT4","NbJets","MET_pT","PuppiMET_pT","DiMuonInvariantMass_ChosenPairing","QuadMuon_Mass"};
+  //TString xtitle[9] = {"pT1_Muon","pT2_Muon","pT1_Electron","pT2_Electron","NbJets","MET_pT","PuppiMET_pT","DileptonInvariantMass","QuadMuonMass_Mass"};
+  //TString xtitle[4] = {"NbJets_4L","MET_4L","PuppiMET_4L","DileptonInvariantMass_4L"};
 
   TString plotname1;
   TH1F *h0, *h1, *h2, *h3, *h4, *g0;
   TH1F *h0new, *h1new, *h2new, *h3new, *h4new, *g0new;
-  int Nbins=8;
+  int Nbins=4;
   
-  for(int i=0; i<4; i++){
+  for(int i=0; i<9; i++){
     plotname1 = chplots[i];
     
     //Now open the respective histograms from the files
