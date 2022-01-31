@@ -409,6 +409,21 @@ Bool_t ZZAna::Process(Long64_t entry)
    }
 
    /****************************************
+    *                3 Muons               *           
+    ****************************************/
+
+   if((int)GoodMu.size()>2){
+     float generator_weight = fabs(*Generator_weight)/ *Generator_weight;
+     float evtweight_Reco   = (getScaleFactors_Muons_Reco(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()));
+     float evtweight_ID     = (getScaleFactors_Muons_ID(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))*(getScaleFactors_Muons_ID(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))*(getScaleFactors_Muons_ID(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()));
+     float evtweight_Iso    = (getScaleFactors_Muons_Iso(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))*(getScaleFactors_Muons_Iso(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))*(getScaleFactors_Muons_Iso(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()));
+     float evtweight        = generator_weight*evtweight_Reco*evtweight_ID*evtweight_Iso;
+
+     h.analysis[17]->Fill((GoodMu.at(1).v+GoodMu.at(2).v).M(),evtweight);
+   }
+
+   
+   /****************************************
     *             4L Analysis              *           
     ****************************************/
 
@@ -612,12 +627,30 @@ Bool_t ZZAna::Process(Long64_t entry)
    
    if(mu4){
      
-     float generator_weight = fabs(*Generator_weight)/ *Generator_weight;
-     float evtweight_Reco = (getScaleFactors_Muons_Reco(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt()));
-     float evtweight_ID = (getScaleFactors_Muons_ID(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))*(getScaleFactors_Muons_ID(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))*(getScaleFactors_Muons_ID(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))*(getScaleFactors_Muons_ID(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt()));
-     float evtweight_Iso = (getScaleFactors_Muons_Iso(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))*(getScaleFactors_Muons_Iso(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))*(getScaleFactors_Muons_Iso(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))*(getScaleFactors_Muons_Iso(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt()));
+     float generator_weight  = fabs(*Generator_weight)/ *Generator_weight;
+
+     float evtweight_Reco    = ( (getScaleFactors_Muons_Reco(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))
+				*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))
+				*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))
+				*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt())) );
      
-     float evtweight = generator_weight*evtweight_Reco*evtweight_ID*evtweight_Iso;
+     float evtweight_ID      = ( (getScaleFactors_Muons_ID(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))
+				*(getScaleFactors_Muons_ID(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))
+				*(getScaleFactors_Muons_ID(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))
+				*(getScaleFactors_Muons_ID(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt())) );
+     
+     float evtweight_Iso     = (  (getScaleFactors_Muons_Iso(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))
+				 *(getScaleFactors_Muons_Iso(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))
+				 *(getScaleFactors_Muons_Iso(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))
+				 *(getScaleFactors_Muons_Iso(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt())) );
+     
+     float evtweight_Trigger = 1-(  (1-getEfficiency_Muons_Trigger(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))
+				   *(1-getEfficiency_Muons_Trigger(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))
+				   *(1-getEfficiency_Muons_Trigger(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))
+				   *(1-getEfficiency_Muons_Trigger(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt())) );
+     
+     
+     float evtweight = generator_weight*evtweight_Reco*evtweight_ID*evtweight_Iso*evtweight_Trigger;
      //cout<<"The evtweight is: "<<evtweight<<endl;
      
      h.ZZ_mu_h[0][0]->Fill(GoodMu.at(0).v.Pt(),evtweight);
@@ -628,7 +661,9 @@ Bool_t ZZAna::Process(Long64_t entry)
      h.ZZ_mu_h[0][5]->Fill(*MET_pt,evtweight);
      h.ZZ_mu_h[0][6]->Fill(*PuppiMET_pt,evtweight);
      for(int i=0; i<(int)MassArray_chosen.size(); i++){
-       h.ZZ_mu_h[0][7]->Fill(MassArray_chosen.at(i),evtweight);
+       if(MassArray_chosen.at(i)>15){
+	 h.ZZ_mu_h[0][7]->Fill(MassArray_chosen.at(i),evtweight);
+       }
      }
      /*for(int i=0; i<(int)MassArray_unchosen.size(); i++){
        h.analysis[13]->Fill(MassArray_unchosen.at(i)); 
@@ -638,10 +673,28 @@ Bool_t ZZAna::Process(Long64_t entry)
    
    if(mu4 && (int)bJet.size()==0){
 
-     float generator_weight = fabs(*Generator_weight)/ *Generator_weight;
-     float evtweight_Reco = (getScaleFactors_Muons_Reco(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt()));
-     float evtweight_ID = (getScaleFactors_Muons_ID(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))*(getScaleFactors_Muons_ID(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))*(getScaleFactors_Muons_ID(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))*(getScaleFactors_Muons_ID(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt()));
-     float evtweight_Iso = (getScaleFactors_Muons_Iso(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))*(getScaleFactors_Muons_Iso(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))*(getScaleFactors_Muons_Iso(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))*(getScaleFactors_Muons_Iso(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt()));
+     float generator_weight  = fabs(*Generator_weight)/ *Generator_weight;
+
+     float evtweight_Reco    = ( (getScaleFactors_Muons_Reco(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))
+				*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))
+				*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))
+				*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt())) );
+     
+     float evtweight_ID      = ( (getScaleFactors_Muons_ID(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))
+				*(getScaleFactors_Muons_ID(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))
+				*(getScaleFactors_Muons_ID(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))
+				*(getScaleFactors_Muons_ID(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt())) );
+     
+     float evtweight_Iso     = (  (getScaleFactors_Muons_Iso(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))
+				 *(getScaleFactors_Muons_Iso(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))
+				 *(getScaleFactors_Muons_Iso(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))
+				 *(getScaleFactors_Muons_Iso(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt())) );
+     
+     float evtweight_Trigger = 1-(  (1-getEfficiency_Muons_Trigger(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))
+				   *(1-getEfficiency_Muons_Trigger(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))
+				   *(1-getEfficiency_Muons_Trigger(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))
+				   *(1-getEfficiency_Muons_Trigger(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt())) );
+     
 
      float evtweight = generator_weight*evtweight_Reco*evtweight_ID*evtweight_Iso;
      
@@ -653,16 +706,37 @@ Bool_t ZZAna::Process(Long64_t entry)
      h.ZZ_mu_h[1][5]->Fill(*MET_pt,evtweight);
      h.ZZ_mu_h[1][6]->Fill(*PuppiMET_pt,evtweight);
      for(int i=0; i<(int)MassArray_chosen.size(); i++){
-       h.ZZ_mu_h[1][7]->Fill(MassArray_chosen.at(i),evtweight);
+       if(MassArray_chosen.at(i)>15){
+	 h.ZZ_mu_h[1][7]->Fill(MassArray_chosen.at(i),evtweight);
+       }
      }
      h.ZZ_mu_h[1][8]->Fill((GoodMu.at(0).v+GoodMu.at(1).v+GoodMu.at(2).v+GoodMu.at(3).v).M(),evtweight);
    }
 
    if(mu4 && (int)bJet.size()==0 && *MET_pt<50){
-     float generator_weight = fabs(*Generator_weight)/ *Generator_weight;
-     float evtweight_Reco = (getScaleFactors_Muons_Reco(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt()));
-     float evtweight_ID = (getScaleFactors_Muons_ID(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))*(getScaleFactors_Muons_ID(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))*(getScaleFactors_Muons_ID(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))*(getScaleFactors_Muons_ID(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt()));
-     float evtweight_Iso = (getScaleFactors_Muons_Iso(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))*(getScaleFactors_Muons_Iso(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))*(getScaleFactors_Muons_Iso(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))*(getScaleFactors_Muons_Iso(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt()));
+
+     float generator_weight  = fabs(*Generator_weight)/ *Generator_weight;
+       
+     float evtweight_Reco    = ( (getScaleFactors_Muons_Reco(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))
+				*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))
+				*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))
+				*(getScaleFactors_Muons_Reco(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt())) );
+     
+     float evtweight_ID      = ( (getScaleFactors_Muons_ID(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))
+				*(getScaleFactors_Muons_ID(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))
+				*(getScaleFactors_Muons_ID(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))
+				*(getScaleFactors_Muons_ID(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt())) );
+     
+     float evtweight_Iso     = (  (getScaleFactors_Muons_Iso(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))
+				 *(getScaleFactors_Muons_Iso(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))
+				 *(getScaleFactors_Muons_Iso(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))
+				 *(getScaleFactors_Muons_Iso(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt())) );
+     
+     float evtweight_Trigger = 1-(  (1-getEfficiency_Muons_Trigger(fabs(GoodMu.at(0).v.Eta()),GoodMu.at(0).v.Pt()))
+				   *(1-getEfficiency_Muons_Trigger(fabs(GoodMu.at(1).v.Eta()),GoodMu.at(1).v.Pt()))
+				   *(1-getEfficiency_Muons_Trigger(fabs(GoodMu.at(2).v.Eta()),GoodMu.at(2).v.Pt()))
+				   *(1-getEfficiency_Muons_Trigger(fabs(GoodMu.at(3).v.Eta()),GoodMu.at(3).v.Pt())) );
+     
 
      float evtweight = generator_weight*evtweight_Reco*evtweight_ID*evtweight_Iso;
      
@@ -674,7 +748,9 @@ Bool_t ZZAna::Process(Long64_t entry)
      h.ZZ_mu_h[2][5]->Fill(*MET_pt,evtweight);
      h.ZZ_mu_h[2][6]->Fill(*PuppiMET_pt,evtweight);
      for(int i=0; i<(int)MassArray_chosen.size(); i++){
-       h.ZZ_mu_h[2][7]->Fill(MassArray_chosen.at(i),evtweight);
+       if(MassArray_chosen.at(i)>15){
+	 h.ZZ_mu_h[2][7]->Fill(MassArray_chosen.at(i),evtweight);
+       }
      }
      h.ZZ_mu_h[2][8]->Fill((GoodMu.at(0).v+GoodMu.at(1).v+GoodMu.at(2).v+GoodMu.at(3).v).M(),evtweight);
    }
@@ -808,6 +884,8 @@ void ZZAna::BookHistograms()
   h.analysis[14]   = new TH1F("NbJets_4L","NbJets_4L",10,0,10);
   h.analysis[15]   = new TH1F("MET_4L","MET_4L",200,0,200);
   h.analysis[16]   = new TH1F("PuppiMET_4L","PuppiMET_4L",200,0,200);
+  //3L Final state
+  h.analysis[17]   = new TH1F("DiMuonInvMass_3L","DimuonInvMass_3L",300,0,15);
 
   
   //Four muon final state
@@ -896,7 +974,8 @@ int ZZAna::GenMother(int ind, int mom_ind)
   return m_id;
 }
 
-double ZZAna::getScaleFactors_Muons_Reco(float eta, float pt){
+//RecoScaleFactors: 2016UL preVFP
+double ZZAna::getScaleFactors_Muons_Reco_preVFP(float eta, float pt){
   double scale_factor=1.0;
 
   if(fabs(eta)<0.9){
@@ -1025,6 +1104,142 @@ double ZZAna::getScaleFactors_Muons_Reco(float eta, float pt){
   return scale_factor;
 }
 
+//RecoScaleFactors: 2016UL postVFP
+double ZZAna::getScaleFactors_Muons_Reco_postVFP(float eta, float pt){
+  double scale_factor=1.0;
+
+  if(fabs(eta)<0.9){
+    if( 2.0<pt && pt<3.25 )
+      scale_factor = 1.0 ;
+    if( 3.25<pt && pt<3.50 )
+      scale_factor = 1.2735928307942586 ;
+    if( 3.50<pt && pt<3.75 )
+      scale_factor = 1.038536665892633 ;
+    if( 3.75<pt && pt<4.0 )
+      scale_factor = 1.0179272663626346 ;
+    if( 4.0<pt && pt<4.5 )
+      scale_factor = 1.0064396337144235 ;
+    if( 4.5<pt && pt<5.0 )
+      scale_factor = 0.9952610380311436 ;
+    if( 5.0<pt && pt<6.0 )
+      scale_factor = 0.9886617311126424 ;
+    if( 6.0<pt && pt<8.0 )
+      scale_factor = 1.007158929005355 ;
+    if( 8.0<pt && pt<10.0 )
+      scale_factor = 1.006647891756716 ;
+    if( 10.0<pt && pt<15.0 )
+      scale_factor = 1.0066631686152465 ;
+    if( 15.0<pt && pt<20.0 )
+      scale_factor = 1.0058808727351949 ;
+    if( 20.0<pt && pt<30.0 )
+      scale_factor = 1.0058399541473997 ;
+    if( 30.0<pt && pt<200.0 )
+      scale_factor = 1.0047417021410996 ;   
+  }
+
+    else if(0.9<fabs(eta) && fabs(eta)<1.2){
+    if( 2.0<pt && pt<3.50 )
+      scale_factor = 1.0 ;
+    if( 3.50<pt && pt<3.75 )
+      scale_factor = 0.6185253969882053 ;
+    if( 3.75<pt && pt<4.0 )
+      scale_factor = 0.9469166415007371 ;
+    if( 4.0<pt && pt<4.5 )
+      scale_factor = 1.0161847682127974 ;
+    if( 4.5<pt && pt<5.0 )
+      scale_factor = 0.9310484767223539 ;
+    if( 5.0<pt && pt<6.0 )
+      scale_factor = 1.009897339326928 ;
+    if( 6.0<pt && pt<8.0 )
+      scale_factor = 1.007027508403878 ;
+    if( 8.0<pt && pt<10.0 )
+      scale_factor = 1.0062041003034161 ;
+    if( 10.0<pt && pt<15.0 )
+      scale_factor = 1.0099097794293355 ;
+    if( 15.0<pt && pt<20.0 )
+      scale_factor = 1.0065290007296392 ;
+    if( 20.0<pt && pt<30.0 )
+      scale_factor = 1.0047119930493842 ;
+    if( 30.0<pt && pt<200.0 )
+      scale_factor = 1.0 ;
+  }
+
+  
+  else if(1.2<fabs(eta) && fabs(eta)<2.1){
+    if( 2.0<pt && pt<2.5 )
+      scale_factor = 1.0 ;
+    if( 2.5<pt && pt<2.75 )
+      scale_factor = 1.0 ;
+    if( 2.75<pt && pt<3.0 )
+      scale_factor = 1.0 ;
+    if( 3.0<pt && pt<3.25 )
+      scale_factor = 1.0 ;
+    if( 3.25<pt && pt<3.50 )
+      scale_factor = 0.9455725240692203 ;
+    if( 3.50<pt && pt<3.75 )
+      scale_factor = 1.0046655328938918 ;
+    if( 3.75<pt && pt<4.0 )
+      scale_factor = 0.9912556590431282 ;
+    if( 4.0<pt && pt<4.5 )
+      scale_factor = 0.961200145010141 ;
+    if( 4.5<pt && pt<5.0 )
+      scale_factor = 1.0035208543548175 ;
+    if( 5.0<pt && pt<6.0 )
+      scale_factor = 1.0028236667446566 ;
+    if( 6.0<pt && pt<8.0 )
+      scale_factor = 1.002243448904213 ;
+    if( 8.0<pt && pt<10.0 )
+      scale_factor = 0.9842686913959845 ;
+    if( 10.0<pt && pt<15.0 )
+      scale_factor = 1.0045166286019926 ;
+    if( 15.0<pt && pt<20.0 )
+      scale_factor = 1.003137641796382  ;
+    if( 20.0<pt && pt<30.0 )
+      scale_factor = 1.0023685314073512 ;
+    if( 30.0<pt && pt<200.0 )
+      scale_factor = 1.0 ;
+  }
+  
+  else if(2.1<fabs(eta) && fabs(eta)<2.4){
+    if( 2.0<pt && pt<2.5 )
+      scale_factor = 1.003101641969965 ;
+    if( 2.5<pt && pt<2.75 )
+      scale_factor = 1.0015080593564991 ;
+    if( 2.75<pt && pt<3.0 )
+      scale_factor = 1.0020953201750005 ;
+    if( 3.0<pt && pt<3.25 )
+      scale_factor = 1.0010844193841386 ;
+    if( 3.25<pt && pt<3.50 )
+      scale_factor = 1.0014976086683698 ;
+    if( 3.50<pt && pt<3.75 )
+      scale_factor = 1.0013997659539167 ;
+    if( 3.75<pt && pt<4.0 )
+      scale_factor = 1.0015739076237173 ;
+    if( 4.0<pt && pt<4.5 )
+      scale_factor = 1.000494083914997 ;
+    if( 4.5<pt && pt<5.0 )
+      scale_factor = 1.0011590620754274 ;
+    if( 5.0<pt && pt<6.0 )
+      scale_factor = 1.000262108470239 ;
+    if( 6.0<pt && pt<8.0 )
+      scale_factor = 1.0004848395299055 ;
+    if( 8.0<pt && pt<10.0 )
+      scale_factor = 1.000224534964638 ;
+    if( 10.0<pt && pt<200.0 )
+      scale_factor = 1.0 ;
+  }
+  return scale_factor;
+}
+
+//Calculating effective reconstruction scale factors
+double ZZAna::getScaleFactors_Muons_Reco(float eta, float pt){
+  double scale_factor=1.0;
+
+  scale_factor = (getScaleFactors_Muons_Reco_preVFP(float (eta), float (pt))*20 + getScaleFactors_Muons_Reco_postVFP(float (eta), float (pt))*16)/36;
+  return scale_factor;
+}
+
+//Muon_Mediumid Scale factors: 2016UL(preVFP and postVFP combined)
 double ZZAna::getScaleFactors_Muons_ID(float eta, float pt){
   double scale_factor=1.0;
 
@@ -1098,6 +1313,8 @@ double ZZAna::getScaleFactors_Muons_ID(float eta, float pt){
   }
   return scale_factor;
 }
+
+//MuonTightIso_Scale factors: 2016UL(preVFP and postVFP combined)
 double ZZAna::getScaleFactors_Muons_Iso(float eta, float pt){
   double scale_factor=1.0;
 
@@ -1170,4 +1387,71 @@ double ZZAna::getScaleFactors_Muons_Iso(float eta, float pt){
       scale_factor = 1.00069328135112667 ;
   }
   return scale_factor;
+}
+
+//MuonTriggerEfficiency
+double ZZAna::getEfficiency_Muons_Trigger(float eta, float pt){
+  double eff_factor = 1.0;
+
+  if(fabs(eta)<0.9){
+    if( 26<pt && pt<30 )
+      eff_factor = 0.891430358091990116 ;
+    if( 30<pt && pt<40 )
+      eff_factor = 0.916997505558861614 ;
+    if( 40<pt && pt<50 )
+      eff_factor = 0.929323958026038288 ;
+    if( 50<pt && pt<60 )
+      eff_factor = 0.932949966854519364 ;
+    if( 60<pt && pt<120 )
+      eff_factor = 0.932453400558895584 ;
+    if( 120<pt && pt<200 )
+      eff_factor = 0.924933989842732784 ;
+  }
+  
+  else if(0.9<fabs(eta) && fabs(eta)<1.2){
+    if( 26<pt && pt<30 )
+      eff_factor = 0.881071481439802406 ;
+    if( 30<pt && pt<40 )
+      eff_factor = 0.91953304078843856 ;
+    if( 40<pt && pt<50 )
+      eff_factor = 0.935559259520636677 ;
+    if( 50<pt && pt<60 )
+      eff_factor = 0.939758843845791336 ;
+    if( 60<pt && pt<120 )
+      eff_factor = 0.939229230086008671 ;
+    if( 120<pt && pt<200 )
+      eff_factor = 0.926802284187740799 ;
+  }
+
+  
+  else if(1.2<fabs(eta) && fabs(eta)<2.1){
+    if( 26<pt && pt<30 )
+      eff_factor = 0.819473167260487911 ;
+    if( 30<pt && pt<40 )
+      eff_factor = 0.860544012652503132 ;
+    if( 40<pt && pt<50 )
+      eff_factor = 0.881642282009124756 ;
+    if( 50<pt && pt<60 )
+      eff_factor = 0.887126167615254757 ;
+    if( 60<pt && pt<120 )
+      eff_factor = 0.88759789864222205 ;
+    if( 120<pt && pt<200 )
+      eff_factor = 0.888963898022969601 ;
+  }
+  
+  else if(2.1<fabs(eta) && fabs(eta)<2.4){
+    if( 26<pt && pt<30 )
+      eff_factor = 0.711451828479766846 ;
+    if( 30<pt && pt<40 )
+      eff_factor = 0.774474415514204262 ;
+    if( 40<pt && pt<50 )
+      eff_factor = 0.804473486211564781 ;
+    if( 50<pt && pt<60 )
+      eff_factor = 0.81278272469838464 ;
+    if( 60<pt && pt<120 )
+      eff_factor = 0.818142698870764851 ;
+    if( 120<pt && pt<200 )
+      eff_factor = 0.808433486355675579 ;
+  }
+  return eff_factor;
 }

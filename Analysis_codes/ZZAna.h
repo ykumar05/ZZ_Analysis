@@ -1572,13 +1572,15 @@ public :
   int GenMother(int ind, int mom_ind);
   void FillPlots(int icr, int iplots);
   double getScaleFactors_Muons_Reco(float pt , float eta);
+  double getScaleFactors_Muons_Reco_preVFP(float pt , float eta);
+  double getScaleFactors_Muons_Reco_postVFP(float pt , float eta);
   double getScaleFactors_Muons_ID(float pt , float eta);
   double getScaleFactors_Muons_Iso(float pt , float eta);
-  double getScaleFactors_Muons_Trigger(float pt , float eta);
+  double getEfficiency_Muons_Trigger(float pt , float eta);
   double getScaleFactors_Electrons_Reco(float pt , float eta);
   double getScaleFactors_Electrons_ID(float pt , float eta);
   double getScaleFactors_Electrons_Iso(float pt , float eta);
-  double getScaleFactors_Electrons_Trigger(float pt , float eta);
+  double getEfficiency_Electrons_Trigger(float pt , float eta);
   
   
 public:
