@@ -16,7 +16,7 @@ using std::endl;
 vector<double> calculate(TString file_name, TString outfile_name, int eta_bin, int pt_bin);
 
 
-void ScaleFactorsCalculator_superpro()
+void ScaleFactorsCalculator_Muons_pro()
 {
 
   TString outfile_post = "ScaleFactors_postVFP_Muon_Trigger.txt";
@@ -27,13 +27,9 @@ void ScaleFactorsCalculator_superpro()
   TString file_post = "/home/bowerbird/Yash/Work/ZZ_Analysis/Scale_Factors/2016UL/Medium_pT_Muon/Trigger/Efficiencies_muon_generalTracks_Z_Run2016_UL_SingleMuonTriggers_postVFP.root";
 
   //Id and Iso
-  /*int eta_bin=4;
-  int pt_bin=7;*/
-
-  //Trigger
   int eta_bin=4;
-  int pt_bin=6;
-  
+  int pt_bin=7;
+
   vector<double> SF_pre = calculate(file_pre, outfile_pre, eta_bin, pt_bin);
   vector<double> SF_post = calculate(file_post, outfile_post, eta_bin, pt_bin);
 
