@@ -34,7 +34,7 @@ void ScaleFactor_Electron_ID_Iso()
   vector<double> SF_post = calculate(file_post, outfile_post, eta_bin, pt_bin);
 
   for(int k =0; k<eta_bin*pt_bin; k++){
-    double ScaleFactor = ( SF_pre.at(k)*20 + SF_post.at(k)*16 )/(36);
+    double ScaleFactor = ( SF_pre.at(k)*19.893068320 + SF_post.at(k)*16.392692052 )/(36.285760373);
     outfile<<setprecision(18);
     outfile<<k+1<<"\t"<<ScaleFactor;    
     if(k != eta_bin*pt_bin-1)

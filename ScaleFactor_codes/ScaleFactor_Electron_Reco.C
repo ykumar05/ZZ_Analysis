@@ -19,22 +19,31 @@ vector<double> calculate(TString file_name, TString outfile_name, int eta_bin, i
 void ScaleFactor_Electron_Reco()
 {
 
-  TString outfile_pre  = "SF_preVFP_Electron_Reco.txt";
-  TString outfile_post = "SF_postVFP_Electron_Reco.txt";
-  ofstream outfile("EffectiveSF_2016UL_Electron_Reco_Above20.txt");
+  /*TString outfile_pre  = "SF_preVFP_Electron_Reco_above20.txt";
+  TString outfile_post = "SF_postVFP_Electron_Reco_above20.txt";
+  ofstream outfile("EffectiveSF_2016UL_Electron_Reco_Above20.txt");*/
+  TString outfile_pre  = "SF_preVFP_Electron_Reco_below20.txt";
+  TString outfile_post = "SF_postVFP_Electron_Reco_below20.txt";
+  ofstream outfile("EffectiveSF_2016UL_Electron_Reco_below20.txt");
   
-  TString file_pre = "/home/bowerbird/Yash/Work/ZZ_Analysis/Scale_Factors/2016UL/Electrons/Reco/EGM2D_ptAbove20_UL2016preVFP.root";
-  TString file_post = "/home/bowerbird/Yash/Work/ZZ_Analysis/Scale_Factors/2016UL/Electrons/Reco/EGM2D_ptAbove20_UL2016postVFP.root";
+  //TString file_pre = "/home/bowerbird/Yash/Work/ZZ_Analysis/Scale_Factors/2016UL/Electrons/Reco/EGM2D_ptAbove20_UL2016preVFP.root";
+  TString file_pre = "/home/bowerbird/Yash/Work/ZZ_Analysis/Scale_Factors/2016UL/Electrons/Reco/EGM2D_ptBelow20_UL2016preVFP.root";
+  //TString file_post = "/home/bowerbird/Yash/Work/ZZ_Analysis/Scale_Factors/2016UL/Electrons/Reco/EGM2D_ptAbove20_UL2016postVFP.root";
+  TString file_post = "/home/bowerbird/Yash/Work/ZZ_Analysis/Scale_Factors/2016UL/Electrons/Reco/EGM2D_ptBelow20_UL2016postVFP.root";
 
-  //Id and Iso
-  int eta_bin=12;
-  int pt_bin=4;
+  //Above 20
+  //int eta_bin=12;
+  //int pt_bin=4;
+
+  //Below 20
+  int eta_bin=10;
+  int pt_bin=1;
 
   vector<double> SF_pre = calculate(file_pre, outfile_pre, eta_bin, pt_bin);
   vector<double> SF_post = calculate(file_post, outfile_post, eta_bin, pt_bin);
 
   for(int k =0; k<eta_bin*pt_bin; k++){
-    double ScaleFactor = ( SF_pre.at(k)*20 + SF_post.at(k)*16 )/(36);
+    double ScaleFactor = ( SF_pre.at(k)*19.893068320 + SF_post.at(k)*16.392692052 )/(36.285760373);
     outfile<<setprecision(18);
     outfile<<k+1<<"\t"<<ScaleFactor;    
     if(k != eta_bin*pt_bin-1)
