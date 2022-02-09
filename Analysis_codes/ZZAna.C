@@ -1562,7 +1562,7 @@ double ZZAna::getScaleFactors_Electrons_Reco(float eta, float pt){
       scale_factor = 0.971992359898162461;
     if(-1.444<eta && eta<-1.0) 
       scale_factor = 0.986520541051353117;
-    if(-1.0<eta && eta<0.5) 
+    if(-1.0<eta && eta<-0.5) 
       scale_factor = 0.982257470773019947;
     if(-0.5<eta && eta<0.0) 
       scale_factor = 0.979021879389539329;
@@ -1589,7 +1589,7 @@ double ZZAna::getScaleFactors_Electrons_Reco(float eta, float pt){
       scale_factor = 0.961027713263803984;
     if(-1.444<eta && eta<-1.0) 
       scale_factor = 0.986727270516519761;
-    if(-1.0<eta && eta<0.5) 
+    if(-1.0<eta && eta<-0.5) 
       scale_factor = 0.983499060530138136;
     if(-0.5<eta && eta<0.0) 
       scale_factor = 0.982336537506073193;
@@ -1616,7 +1616,7 @@ double ZZAna::getScaleFactors_Electrons_Reco(float eta, float pt){
       scale_factor = 1.00269903748759415;
     if(-1.444<eta && eta<-1.0) 
       scale_factor = 0.982310019295089765;
-    if(-1.0<eta && eta<0.5) 
+    if(-1.0<eta && eta<-0.5) 
       scale_factor = 0.976645097738366053;
     if(-0.5<eta && eta<0.0) 
       scale_factor = 0.982741918400384606;
@@ -1642,7 +1642,7 @@ double ZZAna::getScaleFactors_Electrons_Reco(float eta, float pt){
       scale_factor = 1.00738637481511062;
     if(-1.444<eta && eta<-1.0) 
       scale_factor = 0.985292465744200041;
-    if(-1.0<eta && eta<0.5) 
+    if(-1.0<eta && eta<-0.5) 
       scale_factor = 0.987603107715113393;
     if(-0.5<eta && eta<0.0) 
       scale_factor = 0.988513162667765455;
