@@ -19,12 +19,16 @@ vector<double> calculate(TString file_name, TString outfile_name, int eta_bin, i
 void ScaleFactorsCalculator_Muons_pro()
 {
 
-  TString outfile_post = "ScaleFactors_postVFP_Muon_Trigger.txt";
-  TString outfile_pre = "ScaleFactors_preVFP_Muon_Trigger.txt";
-  ofstream outfile("EffectiveScaleFactors_2016UL_Muon_Trigger.txt");
+  TString outfile_post = "ScaleFactors_postVFP_Muon_ID.txt";
+  TString outfile_pre  = "ScaleFactors_preVFP_Muon_ID.txt";
+  ofstream outfile("EffectiveScaleFactors_2016UL_Muon_ID.txt");
   
-  TString file_pre = "/home/bowerbird/Yash/Work/ZZ_Analysis/Scale_Factors/2016UL/Medium_pT_Muon/Trigger/Efficiencies_muon_generalTracks_Z_Run2016_UL_preVFP_SingleMuonTriggers.root";
-  TString file_post = "/home/bowerbird/Yash/Work/ZZ_Analysis/Scale_Factors/2016UL/Medium_pT_Muon/Trigger/Efficiencies_muon_generalTracks_Z_Run2016_UL_SingleMuonTriggers_postVFP.root";
+  TString file_pre = "/home/bowerbird/Yash/Work/ZZ_Analysis/Scale_Factors/2016UL/Medium_pT_Muon/ID/Efficiencies_muon_generalTracks_Z_Run2016_UL_preVFP_ID.root";
+  //TString file_pre = "/home/bowerbird/Yash/Work/ZZ_Analysis/Scale_Factors/2016UL/Medium_pT_Muon/Isolation/Efficiencies_muon_generalTracks_Z_Run2016_UL_preVFP_ISO.root";
+
+  
+  TString file_post = "/home/bowerbird/Yash/Work/ZZ_Analysis/Scale_Factors/2016UL/Medium_pT_Muon/ID/Efficiencies_muon_generalTracks_Z_Run2016_UL_postVFP_ID.root";
+  //TString file_post = "/home/bowerbird/Yash/Work/ZZ_Analysis/Scale_Factors/2016UL/Medium_pT_Muon/Isolation/Efficiencies_muon_generalTracks_Z_Run2016_UL_postVFP_ISO.root";
 
   //Id and Iso
   int eta_bin=4;
@@ -34,7 +38,7 @@ void ScaleFactorsCalculator_Muons_pro()
   vector<double> SF_post = calculate(file_post, outfile_post, eta_bin, pt_bin);
 
   for(int k =0; k<eta_bin*pt_bin; k++){
-    double effScaleFactor = ( SF_pre.at(k)*20 + SF_post.at(k)*16 )/(36);
+    double effScaleFactor = ( SF_pre.at(k)*19.893068320 + SF_post.at(k)*16.392692052)/(36.285760373);
     outfile<<setprecision(18);
     outfile<<k+1<<"\t"<<effScaleFactor;    
     if(k != eta_bin*pt_bin-1)
@@ -53,16 +57,12 @@ vector<double> calculate(TString file_name, TString outfile_name, int eta_bin, i
   ofstream file(outfile_name);
 
   //ID
-  //TString plotname1 = "NUM_MediumID_DEN_TrackerMuons_abseta_pt_efficiencyData";
-  //TString plotname2 = "NUM_MediumID_DEN_TrackerMuons_abseta_pt_efficiencyMC";
+  TString plotname1 = "NUM_MediumID_DEN_TrackerMuons_abseta_pt_efficiencyData";
+  TString plotname2 = "NUM_MediumID_DEN_TrackerMuons_abseta_pt_efficiencyMC";
 
   //Isolation
   //TString plotname1 = "NUM_TightRelIso_DEN_MediumID_abseta_pt_efficiencyData";
   //TString plotname2 = "NUM_TightRelIso_DEN_MediumID_abseta_pt_efficiencyMC";
-
-  //Trigger
-  TString plotname1 = "NUM_IsoMu24_or_IsoTkMu24_DEN_CutBasedIdTight_and_PFIsoTight_abseta_pt_efficiencyData";
-  TString plotname2 = "NUM_IsoMu24_or_IsoTkMu24_DEN_CutBasedIdTight_and_PFIsoTight_abseta_pt_efficiencyMC";
 
   //Now let us open the files
   TFile *file_1 = new TFile(file1);
@@ -91,8 +91,8 @@ vector<double> calculate(TString file_name, TString outfile_name, int eta_bin, i
       
       file<<setprecision(18);
       file<<binno<<"\t";
-      file<<Num<<"\t";
-      file<<Den<<"\t";
+      //file<<Num<<"\t";
+      //file<<Den<<"\t";
       file<<SF;     
       
       if(binno!=eta_bin*pt_bin)

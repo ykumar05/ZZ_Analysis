@@ -34,7 +34,7 @@ void EfficiencyTriggerMuon_Calculator()
   vector<double> Efficiency_post = calculate(file_post, outfile_post, eta_bin, pt_bin);
 
   for(int k =0; k<eta_bin*pt_bin; k++){
-    double effEfficiency = ( Efficiency_pre.at(k)*20 + Efficiency_post.at(k)*16 )/(36);
+    double effEfficiency = ( Efficiency_pre.at(k)*19.893068320 + Efficiency_post.at(k)*16.392692052 )/(36.285760373);
     outfile<<setprecision(18);
     outfile<<k+1<<"\t"<<effEfficiency;    
     if(k != eta_bin*pt_bin-1)
