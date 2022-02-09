@@ -853,13 +853,17 @@ Bool_t ZZAna::Process(Long64_t entry)
      h.ZZ_emu_h[0][1]->Fill(GoodMu.at(1).v.Pt(),evtweight);
      h.ZZ_emu_h[0][2]->Fill(GoodEle.at(0).v.Pt(),evtweight);
      h.ZZ_emu_h[0][3]->Fill(GoodEle.at(1).v.Pt(),evtweight);
-     h.ZZ_emu_h[0][4]->Fill((int)bJet.size(),evtweight);
-     h.ZZ_emu_h[0][5]->Fill(*MET_pt,evtweight);
-     h.ZZ_emu_h[0][6]->Fill(*PuppiMET_pt,evtweight);
+     h.ZZ_emu_h[0][4]->Fill(GoodMu.at(0).v.Eta(),evtweight);
+     h.ZZ_emu_h[0][5]->Fill(GoodMu.at(1).v.Eta(),evtweight);
+     h.ZZ_emu_h[0][6]->Fill(GoodEle.at(0).v.Eta(),evtweight);
+     h.ZZ_emu_h[0][7]->Fill(GoodEle.at(1).v.Eta(),evtweight);
+     h.ZZ_emu_h[0][8]->Fill((int)bJet.size(),evtweight);
+     h.ZZ_emu_h[0][9]->Fill(*MET_pt,evtweight);
+     h.ZZ_emu_h[0][10]->Fill(*PuppiMET_pt,evtweight);
      for(int i=0; i<(int)MassArray_2e2mu.size(); i++){
-       h.ZZ_emu_h[0][7]->Fill(MassArray_2e2mu.at(i),evtweight);
+       h.ZZ_emu_h[0][11]->Fill(MassArray_2e2mu.at(i),evtweight);
      }
-     h.ZZ_emu_h[0][8]->Fill((GoodMu.at(0).v+GoodMu.at(1).v+GoodEle.at(0).v+GoodEle.at(1).v).M(),evtweight);
+     h.ZZ_emu_h[0][12]->Fill((GoodMu.at(0).v+GoodMu.at(1).v+GoodEle.at(0).v+GoodEle.at(1).v).M(),evtweight);
    }
 
    
@@ -961,7 +965,7 @@ void ZZAna::BookHistograms(){
   TString crname_mu[4] = {"rA_mu_","rB_mu_","rC_mu_","rD_mu_"};
   TString plotname_mu[9] = {"pT1","pT2","pT3","pT4","NbJets","MET_pT","PuppiMET_pT","DiMuonInvariantMass_ChosenPairing","QuadMuon_Mass"};
   int nbins_mu[9] = {200,200,200,200,5,100,100,200,600};
-  float blo_mu[9] = {0,0,0,0,0,0,0,0,0};
+  float blo_mu[9] = {0,  0,  0,  0,  0,0,  0,  0,  0};
   float bhi_mu[9] = {200,200,200,200,5,100,100,200,600};
   for(int icr_mu=0; icr_mu<3; icr_mu++){
     for(int iplot_mu=0; iplot_mu<9; iplot_mu++){
@@ -973,12 +977,12 @@ void ZZAna::BookHistograms(){
 
   // Two electron and two muon final state
   TString crname_emu[4] = {"rA_emu_","rB_emu_","rC_emu_","rD_emu_"};
-  TString plotname_emu[9] = {"pT1_Muon","pT2_Muon","pT1_Electron","pT2_Electron","NbJets","MET_pT","PuppiMET_pT","DileptonInvariantMass","Quadlepton_Mass"};
-  int nbins_emu[9] = {200,200,200,200,5,100,100,200,600};
-  float blo_emu[9] = {0,0,0,0,0,0,0,0,0};
-  float bhi_emu[9] = {200,200,200,200,5,100,100,200,600};
+  TString plotname_emu[13] = {"pT1_Muon","pT2_Muon","pT1_Electron","pT2_Electron","eta1_Muon","eta2_Muon","eta1_Electron","eta2_Electron","NbJets","MET_pT","PuppiMET_pT","DileptonInvariantMass","Quadlepton_Mass"};
+  int nbins_emu[13] = {200,200,200,200,80,80,80,80,5,100,100,200,600};
+  float blo_emu[13] = {0,  0,  0,  0,  -4,-4,-4,-4,0,0,  0,  0,  0};
+  float bhi_emu[13] = {200,200,200,200,-4,-4,-4,-4,5,100,100,200,600};
   for(int icr_emu=0; icr_emu<1; icr_emu++){
-    for(int iplot_emu=0; iplot_emu<9; iplot_emu++){
+    for(int iplot_emu=0; iplot_emu<13; iplot_emu++){
       TString name_emu = crname_emu[icr_emu] + plotname_emu[iplot_emu];
       h.ZZ_emu_h[icr_emu][iplot_emu] = new TH1F(name_emu,name_emu,nbins_emu[iplot_emu],blo_emu[iplot_emu],bhi_emu[iplot_emu]);
       h.ZZ_emu_h[icr_emu][iplot_emu]->Sumw2();
@@ -1303,7 +1307,7 @@ double ZZAna::getScaleFactors_Muons_Reco_postVFP(float eta, float pt){
 double ZZAna::getScaleFactors_Muons_Reco(float eta, float pt){
   double scale_factor=1.0;
 
-  scale_factor = (getScaleFactors_Muons_Reco_preVFP(float (eta), float (pt))*20 + getScaleFactors_Muons_Reco_postVFP(float (eta), float (pt))*16)/36;
+  scale_factor = (getScaleFactors_Muons_Reco_preVFP(float (eta), float (pt))*19.893068320 + getScaleFactors_Muons_Reco_postVFP(float (eta), float (pt))*16.392692052)/36.285760373;
   return scale_factor;
 }
 
@@ -1313,71 +1317,71 @@ double ZZAna::getScaleFactors_Muons_ID(float eta, float pt){
 
   if(fabs(eta)<0.9){
     if( 15<pt && pt<20 )
-      scale_factor = 0.998179904934898721 ;
+      scale_factor = 0.998149851100929353 ;
     if( 20<pt && pt<25 )
-      scale_factor = 0.99830329517085814 ;
+      scale_factor = 0.998291487835130664 ;
     if( 25<pt && pt<30 )
-      scale_factor = 0.998278154988515354 ;
+      scale_factor = 0.998257223893494805 ;
     if( 30<pt && pt<40 )
-      scale_factor = 0.997988832677700888 ;
+      scale_factor = 0.997967742103318955 ;
     if( 40<pt && pt<50 )
-      scale_factor = 0.997956039111710713 ;
+      scale_factor = 0.997934660425367048 ;
     if( 50<pt && pt<60 )
-      scale_factor = 0.997480004570111656 ;
+      scale_factor = 0.997458634111260123 ;
     if( 60<pt && pt<500 )
-      scale_factor = 0.997534393125491969 ;
+      scale_factor = 0.997513000455649945 ;
   }
   
   else if(0.9<fabs(eta) && fabs(eta)<1.2){
     if( 15<pt && pt<20 )
-      scale_factor = 0.993889945950189868 ;
+      scale_factor = 0.993896162647767922 ;
     if( 20<pt && pt<25 )
-      scale_factor = 0.994401793012379187 ;
+      scale_factor = 0.994399214330517478 ;
     if( 25<pt && pt<30 )
-      scale_factor = 0.995124811857250213 ;
+      scale_factor = 0.995105235077526795 ;
     if( 30<pt && pt<40 )
-      scale_factor = 0.994979724623258344 ;
+      scale_factor = 0.9949702067401065 ;
     if( 40<pt && pt<50 )
-      scale_factor = 0.995367143033980217 ;
+      scale_factor = 0.995359204206715975 ;
     if( 50<pt && pt<60 )
-      scale_factor = 0.995259384451119389 ;
+      scale_factor = 0.995246944317726312 ;
     if( 60<pt && pt<500 )
-      scale_factor = 0.994569540695449783 ;
+      scale_factor = 0.994553087338715391 ;
   }
 
   
   else if(1.2<fabs(eta) && fabs(eta)<2.1){
     if( 15<pt && pt<20 )
-      scale_factor = 0.994883065784978982 ;
+      scale_factor = 0.994877074452496846 ;
     if( 20<pt && pt<25 )
-      scale_factor = 0.994933568843053617 ;
+      scale_factor = 0.9949211663189792 ;
     if( 25<pt && pt<30 )
-      scale_factor = 0.995294446998933546 ;
+      scale_factor = 0.995277419174155908 ;
     if( 30<pt && pt<40 )
-      scale_factor = 0.99563985911437114 ;
+      scale_factor = 0.995628093128199221 ;
     if( 40<pt && pt<50 )
-      scale_factor = 0.996378944864988569 ;
+      scale_factor = 0.996367036594828503 ;
     if( 50<pt && pt<60 )
-      scale_factor = 0.996014481509890359 ;
+      scale_factor = 0.996001667478233932 ;
     if( 60<pt && pt<500 )
-      scale_factor = 0.996157333877533802 ;
+      scale_factor = 0.996147544899442683 ;
   }
   
   else if(2.1<fabs(eta) && fabs(eta)<2.4){
     if( 15<pt && pt<20 )
-      scale_factor = 0.976747405936561175 ;
+      scale_factor = 0.976717164506088364 ;
     if( 20<pt && pt<25 )
-      scale_factor = 0.975688840459463691 ;
+      scale_factor = 0.975669175136677391 ;
     if( 25<pt && pt<30 )
-      scale_factor = 0.975987906281726714 ;
+      scale_factor = 0.975968779010545018 ;
     if( 30<pt && pt<40 )
-      scale_factor = 0.976947217047071437 ;
+      scale_factor = 0.976920131509781853 ;
     if( 40<pt && pt<50 )
-      scale_factor = 0.976347433680206378 ;
+      scale_factor = 0.976328363869337745 ;
     if( 50<pt && pt<60 )
-      scale_factor = 0.976876997398022251 ;
+      scale_factor = 0.976850240645091961 ;
     if( 60<pt && pt<500 )
-      scale_factor = 0.975152286467743545 ;
+      scale_factor = 0.975139013892607265 ;
   }
   return scale_factor;
 }
@@ -1388,71 +1392,71 @@ double ZZAna::getScaleFactors_Muons_Iso(float eta, float pt){
 
   if(fabs(eta)<0.9){
     if( 15<pt && pt<20 )
-      scale_factor = 0.987778547702043985 ;
+      scale_factor = 0.987747488735939205 ;
     if( 20<pt && pt<25 )
-      scale_factor = 0.991494879152131303 ;
+      scale_factor = 0.991439953337746038 ;
     if( 25<pt && pt<30 )
-      scale_factor = 0.988953382957504123 ;
+      scale_factor = 0.988911255582607618 ;
     if( 30<pt && pt<40 )
-      scale_factor = 0.994468703426339307 ;
+      scale_factor = 0.994449992616527334 ;
     if( 40<pt && pt<50 )
-      scale_factor = 0.996726918748909729 ;
+      scale_factor = 0.99672270094402704 ;
     if( 50<pt && pt<60 )
-      scale_factor = 0.997054906988794509 ;
+      scale_factor = 0.997052557431716391 ;
     if( 60<pt && pt<500 )
-      scale_factor = 0.998868311321585267 ;
+      scale_factor = 0.998865814062801838 ;
   }
   
   else if(0.9<fabs(eta) && fabs(eta)<1.2){
     if( 15<pt && pt<20 )
-      scale_factor = 0.992284497975155499 ;
+      scale_factor = 0.992124546019055309 ;
     if( 20<pt && pt<25 )
-      scale_factor = 0.994445238716516133 ;
+      scale_factor = 0.994347561351960341 ;
     if( 25<pt && pt<30 )
-      scale_factor = 1.00015108444872491 ;
+      scale_factor = 1.00009811952955396 ;
     if( 30<pt && pt<40 )
-      scale_factor = 0.998685892116171758 ;
+      scale_factor = 0.998655171064091851 ;
     if( 40<pt && pt<50 )
-      scale_factor = 0.997541391524236265 ;
+      scale_factor = 0.997534742757214654 ;
     if( 50<pt && pt<60 )
-      scale_factor = 0.998522557263133659 ;
+      scale_factor = 0.998504567013371647 ;
     if( 60<pt && pt<500 )
-      scale_factor = 0.999511515676385964 ;
+      scale_factor = 0.999502762663620703 ;
   }
 
   
   else if(1.2<fabs(eta) && fabs(eta)<2.1){
     if( 15<pt && pt<20 )
-      scale_factor = 1.00060948451767384 ;
+      scale_factor = 1.00056512943576603 ;
     if( 20<pt && pt<25 )
-      scale_factor = 1.00247062995998437 ;
+      scale_factor = 1.00239524570623728 ;
     if( 25<pt && pt<30 )
-      scale_factor = 1.00337960717140229 ;
+      scale_factor = 1.00335005326089566 ;
     if( 30<pt && pt<40 )
-      scale_factor = 1.00037891036521942 ;
+      scale_factor = 1.00035892621186395 ;
     if( 40<pt && pt<50 )
-      scale_factor = 0.999359722227062264 ;
+      scale_factor = 0.999351949498140879 ;
     if( 50<pt && pt<60 )
-      scale_factor = 0.998656508751751715 ;
+      scale_factor = 0.998652927217367425 ;
     if( 60<pt && pt<500 )
-      scale_factor = 0.999743845471649295 ;
+      scale_factor = 0.999741624831422371 ;
   }
   
   else if(2.1<fabs(eta) && fabs(eta)<2.4){
     if( 15<pt && pt<20 )
-      scale_factor = 1.01090285270219526 ;
+      scale_factor = 1.01085551104935223 ;
     if( 20<pt && pt<25 )
-      scale_factor = 1.00762322825897188 ;
+      scale_factor = 1.00757112576341279 ;
     if( 25<pt && pt<30 )
-      scale_factor = 1.00462853050708389 ;
+      scale_factor = 1.00463419997429027 ;
     if( 30<pt && pt<40 )
-      scale_factor = 1.00190767245697021 ;
+      scale_factor = 1.00188720406503329 ;
     if( 40<pt && pt<50 )
-      scale_factor = 1.00102989223772743 ;
+      scale_factor = 1.00102886589813367 ;
     if( 50<pt && pt<60 )
-      scale_factor = 1.00050965081981347 ;
+      scale_factor = 1.00050039795922241 ;
     if( 60<pt && pt<500 )
-      scale_factor = 1.00069328135112667 ;
+      scale_factor = 1.00069160665248558 ;
   }
   return scale_factor;
 }
@@ -1463,63 +1467,63 @@ double ZZAna::getEfficiency_Muons_Trigger(float eta, float pt){
 
   if(fabs(eta)<0.9){
     if( 26<pt && pt<30 )
-      eff_factor = 0.891430358091990116 ;
+      eff_factor = 0.891489903309503728;
     if( 30<pt && pt<40 )
-      eff_factor = 0.916997505558861614 ;
+      eff_factor = 0.91707141849787599;
     if( 40<pt && pt<50 )
-      eff_factor = 0.929323958026038288 ;
+      eff_factor = 0.929418299394620395;
     if( 50<pt && pt<60 )
-      eff_factor = 0.932949966854519364 ;
+      eff_factor =  0.93304227489419167;
     if( 60<pt && pt<120 )
-      eff_factor = 0.932453400558895584 ;
+      eff_factor =  0.93255612531719867;
     if( 120<pt && pt<200 )
-      eff_factor = 0.924933989842732784 ;
+      eff_factor =  0.925045990491032422;
   }
   
   else if(0.9<fabs(eta) && fabs(eta)<1.2){
     if( 26<pt && pt<30 )
-      eff_factor = 0.881071481439802406 ;
+      eff_factor = 0.881113894149388011 ;
     if( 30<pt && pt<40 )
-      eff_factor = 0.91953304078843856 ;
+      eff_factor = 0.919573459010451733 ;
     if( 40<pt && pt<50 )
-      eff_factor = 0.935559259520636677 ;
+      eff_factor = 0.935620477137878437 ;
     if( 50<pt && pt<60 )
-      eff_factor = 0.939758843845791336 ;
+      eff_factor = 0.939823916015407157 ;
     if( 60<pt && pt<120 )
-      eff_factor = 0.939229230086008671 ;
+      eff_factor = 0.93927544802985663 ;
     if( 120<pt && pt<200 )
-      eff_factor = 0.926802284187740799 ;
+      eff_factor = 0.92685094570523141 ;
   }
 
   
   else if(1.2<fabs(eta) && fabs(eta)<2.1){
     if( 26<pt && pt<30 )
-      eff_factor = 0.819473167260487911 ;
+      eff_factor = 0.819451400276238417 ;
     if( 30<pt && pt<40 )
-      eff_factor = 0.860544012652503132 ;
+      eff_factor = 0.860546033301118451 ;
     if( 40<pt && pt<50 )
-      eff_factor = 0.881642282009124756 ;
+      eff_factor = 0.881667259327846731 ;
     if( 50<pt && pt<60 )
-      eff_factor = 0.887126167615254757 ;
+      eff_factor = 0.887164371390772755 ;
     if( 60<pt && pt<120 )
-      eff_factor = 0.88759789864222205 ;
+      eff_factor = 0.887657510633678482 ;
     if( 120<pt && pt<200 )
-      eff_factor = 0.888963898022969601 ;
+      eff_factor = 0.889108688554242521 ;
   }
   
   else if(2.1<fabs(eta) && fabs(eta)<2.4){
     if( 26<pt && pt<30 )
-      eff_factor = 0.711451828479766846 ;
+      eff_factor = 0.711528363061312508 ;
     if( 30<pt && pt<40 )
-      eff_factor = 0.774474415514204262 ;
+      eff_factor = 0.774496878560869018 ;
     if( 40<pt && pt<50 )
-      eff_factor = 0.804473486211564781 ;
+      eff_factor = 0.804513924076112774 ;
     if( 50<pt && pt<60 )
-      eff_factor = 0.81278272469838464 ;
+      eff_factor = 0.812851125961897458 ;
     if( 60<pt && pt<120 )
-      eff_factor = 0.818142698870764851 ;
+      eff_factor = 0.818212671719673046 ;
     if( 120<pt && pt<200 )
-      eff_factor = 0.808433486355675579 ;
+      eff_factor = 0.808517006874505895 ;
   }
   return eff_factor;
 }
@@ -1529,131 +1533,131 @@ double ZZAna::getScaleFactors_Electrons_Reco(float eta, float pt){
   
   if(10<pt && pt<20){
     if(-2.4<eta && eta<-2.1) 
-      scale_factor = 1.01448949178059888;
+      scale_factor = 1.01449938737346868;
     if(-2.1<eta && eta<-1.566) 
-      scale_factor = 0.990329477522108315;
+      scale_factor = 0.990329249241764131;
     if(-1.566<eta && eta<-1.444) 
-      scale_factor = 1.17230590184529615;
+      scale_factor = 1.17174254796855615;
     if(-1.444<eta && eta<-1.0) 
-      scale_factor = 0.991350465350680832;
+      scale_factor = 0.990918301993408024;
     if(-1.0<eta && eta<0.0) 
-      scale_factor = 1.04162266519334579;
+      scale_factor = 1.04139090932332801;
     if(0.0<eta && eta<1.0) 
-      scale_factor = 1.04162266519334579;
+      scale_factor = 1.04139090932332801;
     if(1.0<eta && eta<1.444) 
-      scale_factor = 0.991350465350680832;
+      scale_factor = 0.990918301993408024;
     if(1.444<eta && eta<1.566) 
-      scale_factor = 1.17230590184529615;
+      scale_factor = 1.17174254796855615;
     if(1.566<eta && eta<2.0) 
-      scale_factor = 0.990329477522108315;
+      scale_factor = 0.990329249241764131;
     if(2.0<eta && eta<2.4) 
-      scale_factor = 1.01448949178059888;
+      scale_factor = 1.01449938737346868;
   }
   if(20<pt && pt<45){
     if(-2.4<eta && eta<-2.1) 
-      scale_factor = 1.01393263207541562;
+      scale_factor = 1.01421502820683829;
     if(-2.1<eta && eta<-1.566) 
-      scale_factor = 0.99270998107062447;
+      scale_factor = 0.992709758900239048;
     if(-1.566<eta && eta<-1.444) 
-      scale_factor = 0.971759047773149254;
+      scale_factor = 0.971992359898162461;
     if(-1.444<eta && eta<-1.0) 
-      scale_factor = 0.986505568027496338;
+      scale_factor = 0.986520541051353117;
     if(-1.0<eta && eta<0.5) 
-      scale_factor = 0.982211887836456299;
+      scale_factor = 0.982257470773019947;
     if(-0.5<eta && eta<0.0) 
-      scale_factor = 0.978960871696472168;
+      scale_factor = 0.979021879389539329;
     if(0.0<eta && eta<0.5) 
-      scale_factor = 0.985260983308156368;
+      scale_factor = 0.985238957079734412;
     if(0.5<eta && eta<1.0) 
-      scale_factor = 0.986813724040985107;
+      scale_factor = 0.986799041625331275;
     if(1.0<eta && eta<1.444) 
-      scale_factor = 0.987445645862155441;
+      scale_factor = 0.987408135522737318;
     if(1.444<eta && eta<1.566) 
-      scale_factor = 0.973707669311099533;
+      scale_factor = 0.97374298566130657;
     if(1.566<eta && eta<2.0) 
-      scale_factor = 0.991490264733632443;
+      scale_factor = 0.991452185288979715;
     if(2.0<eta && eta<2.4) 
-      scale_factor = 0.99618503782484269;
+      scale_factor = 0.996122187468577613;
     }
     
   if(45<pt && pt<75){
     if(-2.4<eta && eta<-2.1) 
-      scale_factor = 1.00442620780732894;
+      scale_factor = 1.00463771630963028;
     if(-2.1<eta && eta<-1.566) 
-      scale_factor = 0.991372115082211014;
+      scale_factor = 0.991349108631146336;
     if(-1.566<eta && eta<-1.444) 
-      scale_factor = 0.961046099662780762;
+      scale_factor = 0.961027713263803984;
     if(-1.444<eta && eta<-1.0) 
-      scale_factor = 0.986727171474032883;
+      scale_factor = 0.986727270516519761;
     if(-1.0<eta && eta<0.5) 
-      scale_factor = 0.983468506071302651;
+      scale_factor = 0.983499060530138136;
     if(-0.5<eta && eta<0.0) 
-      scale_factor = 0.98229103618197966;
+      scale_factor = 0.982336537506073193;
     if(0.0<eta && eta<0.5) 
-      scale_factor = 0.986387530962626102;
+      scale_factor = 0.986365619951774741;
     if(0.5<eta && eta<1.0) 
-      scale_factor = 0.987345370981428383;
+      scale_factor = 0.987338210005706651;
     if(1.0<eta && eta<1.444) 
-      scale_factor = 0.987421433130900028;
+      scale_factor = 0.987399125404869071;
     if(1.444<eta && eta<1.566) 
-      scale_factor = 0.967947648631201862;
+      scale_factor = 0.967829236769495727;
     if(1.566<eta && eta<2.0) 
-      scale_factor = 0.989836785528394936;
+      scale_factor = 0.989821580269147572;
     if(2.0<eta && eta<2.4) 
-      scale_factor = 0.992115318775177002;
+      scale_factor = 0.992108366413011589;
     }
 
   if(75<pt && pt<100){
     if(-2.4<eta && eta<-2.1) 
-      scale_factor = 0.993540048599243164;
+      scale_factor = 0.993625189142279597;
     if(-2.1<eta && eta<-1.566) 
-      scale_factor = 0.979585521750979904;
+      scale_factor = 0.97950239702516384;
     if(-1.566<eta && eta<-1.444) 
-      scale_factor = 1.00285185707940006;
+      scale_factor = 1.00269903748759415;
     if(-1.444<eta && eta<-1.0) 
-      scale_factor = 0.982317573494381424;
+      scale_factor = 0.982310019295089765;
     if(-1.0<eta && eta<0.5) 
-      scale_factor = 0.976644403404659744;
+      scale_factor = 0.976645097738366053;
     if(-0.5<eta && eta<0.0) 
-      scale_factor = 0.982822967900170208;
+      scale_factor = 0.982741918400384606;
     if(0.0<eta && eta<0.5) 
-      scale_factor = 0.982822967900170208;
+      scale_factor = 0.982741918400384606;
     if(0.5<eta && eta<1.0) 
-      scale_factor = 0.976644403404659744;
+      scale_factor = 0.976645097738366053;
     if(1.0<eta && eta<1.444) 
-      scale_factor = 0.982317573494381424;
+      scale_factor = 0.982310019295089765;
     if(1.444<eta && eta<1.566) 
-      scale_factor = 1.00285185707940006;
+      scale_factor = 1.00269903748759415;
     if(1.566<eta && eta<2.0) 
-      scale_factor = 0.979585521750979904;
+      scale_factor = 0.97950239702516384;
     if(2.0<eta && eta<2.4) 
-      scale_factor = 0.993540048599243164;
+      scale_factor = 0.993625189142279597;
     }
   if(100<pt && pt<1000){
     if(-2.4<eta && eta<-2.1) 
-      scale_factor = 1.01000316937764478;
+      scale_factor = 1.01001006407583294;
     if(-2.1<eta && eta<-1.566) 
-      scale_factor = 1.00773619280921078;
+      scale_factor = 1.00759384448967615;
     if(-1.566<eta && eta<-1.444) 
-      scale_factor = 1.00749973456064867;
+      scale_factor = 1.00738637481511062;
     if(-1.444<eta && eta<-1.0) 
-      scale_factor = 0.985203742980957031;
+      scale_factor = 0.985292465744200041;
     if(-1.0<eta && eta<0.5) 
-      scale_factor = 0.98755870925055611;
+      scale_factor = 0.987603107715113393;
     if(-0.5<eta && eta<0.0) 
-      scale_factor = 0.988535126050313351;
+      scale_factor = 0.988513162667765455;
     if(0.0<eta && eta<0.5) 
-      scale_factor = 0.988535126050313351;
+      scale_factor = 0.988513162667765455;
     if(0.5<eta && eta<1.0) 
-      scale_factor = 0.98755870925055611;
+      scale_factor = 0.987603107715113393;
     if(1.0<eta && eta<1.444) 
-      scale_factor = 0.985203742980957031;
+      scale_factor = 0.985292465744200041;
     if(1.444<eta && eta<1.566) 
-      scale_factor = 1.00749973456064867;
+      scale_factor = 1.00738637481511062;
     if(1.566<eta && eta<2.0) 
-      scale_factor = 1.00773619280921078;
+      scale_factor = 1.00759384448967615;
     if(2.0<eta && eta<2.4) 
-      scale_factor = 1.01000316937764478;
+      scale_factor = 1.01001006407583294;
     }
   return scale_factor;
 }
@@ -1663,117 +1667,117 @@ double ZZAna::getScaleFactors_Electrons_IDIso(float eta, float pt){
   
   if(10<pt && pt<20){
     if(-2.4<eta && eta<-2.1) 
-      scale_factor = 1.06316983699798584;
+      scale_factor = 1.06286065839054267;
     if(-2.1<eta && eta<-1.566) 
-      scale_factor = 1.045610162946913;
+      scale_factor = 1.0452784654088656;
     if(-1.566<eta && eta<-1.444) 
-      scale_factor = 1;
+      scale_factor = 0.999999999972440934;
     if(-1.444<eta && eta<-0.8) 
-      scale_factor = 1.02309005790286589;
+      scale_factor = 1.02283331727102444;
     if(-0.8<eta && eta<0.0) 
-      scale_factor = 0.972585002581278446;
+      scale_factor = 0.972398120913973707;
     if(0.0<eta && eta<0.8) 
-      scale_factor = 0.97979246907764006;
+      scale_factor = 0.97960432481725257;
     if(0.8<eta && eta<1.444) 
-      scale_factor = 1.03856579462687182;
+      scale_factor = 1.03805750691163579;
     if(1.444<eta && eta<1.566) 
-      scale_factor = 1;
+      scale_factor = 0.999999999972440934;
     if(1.566<eta && eta<2.0) 
-      scale_factor = 1.03034557236565494;
+      scale_factor = 1.03026541056380805;
     if(2.0<eta && eta<2.4) 
-      scale_factor = 1.05637967586517334;
+      scale_factor = 1.05593562196233748;
   }
 
   if(20<pt && pt<35){
     if(-2.4<eta && eta<-2.1) 
-      scale_factor = 1.02417140536838103;
+      scale_factor = 1.02406233704161287;
     if(-2.1<eta && eta<-1.566) 
-      scale_factor = 1.00863300429450131;
+      scale_factor = 1.0084838411156658;
     if(-1.566<eta && eta<-1.444) 
-      scale_factor = 1;
+      scale_factor = 0.999999999972440934;
     if(-1.444<eta && eta<-0.8) 
-      scale_factor = 0.990166293250189899;
+      scale_factor = 0.990074390601275667;
     if(-0.8<eta && eta<0.0) 
-      scale_factor = 0.968974007500542522;
+      scale_factor = 0.968918595226785029;
     if(0.0<eta && eta<0.8) 
-      scale_factor = 0.983436869250403523;
+      scale_factor = 0.983458187534608785;
     if(0.8<eta && eta<1.444) 
-      scale_factor = 0.995318664444817425;
+      scale_factor = 0.995194471190052554;
     if(1.444<eta && eta<1.566) 
-      scale_factor = 1;
+      scale_factor = 0.999999999972440934;
     if(1.566<eta && eta<2.0) 
-      scale_factor = 0.999914500448438881;
+      scale_factor = 0.999754898729710684;
     if(2.0<eta && eta<2.4) 
-      scale_factor = 1.01638425721062564;
+      scale_factor = 1.01631894276827861;
   }
 
   if(35<pt && pt<50){
     if(-2.4<eta && eta<-2.1) 
-      scale_factor = 1.01238840156131316;
+      scale_factor = 1.0123416135856973;
     if(-2.1<eta && eta<-1.566) 
-      scale_factor = 1.0072176456451416;
+      scale_factor = 1.00713830258719228;
     if(-1.566<eta && eta<-1.444) 
-      scale_factor = 1;
+      scale_factor = 0.999999999972440934;
     if(-1.444<eta && eta<-0.8) 
-      scale_factor = 0.986762649483150955;
+      scale_factor = 0.986702599264008495;
     if(-0.8<eta && eta<0.0) 
-      scale_factor = 0.970998260709974526;
+      scale_factor = 0.971026780531052736;
     if(0.0<eta && eta<0.8) 
-      scale_factor = 0.982610225677490234;
+      scale_factor = 0.98265400572043593;
     if(0.8<eta && eta<1.444) 
-      scale_factor = 0.990672462516360763;
+      scale_factor = 0.990637744894401595;
     if(1.444<eta && eta<1.566) 
-      scale_factor = 1;
+      scale_factor = 0.999999999972440934;
     if(1.566<eta && eta<2.0) 
-      scale_factor = 1.00322821405198837;
+      scale_factor = 1.00312260574528778;
     if(2.0<eta && eta<2.4) 
-      scale_factor = 1.00469050142500138;
+      scale_factor = 1.00457913398390186;
   }
 
   if(50<pt && pt<100){
     if(-2.4<eta && eta<-2.1) 
-      scale_factor = 1.00294347604115797;
+      scale_factor = 1.00295231896444048;
     if(-2.1<eta && eta<-1.566) 
-      scale_factor = 1.00411701202392578;
+      scale_factor = 1.00410856706977247;
     if(-1.566<eta && eta<-1.444) 
-      scale_factor = 1;
+      scale_factor = 0.999999999972440934;
     if(-1.444<eta && eta<-0.8) 
-      scale_factor = 0.98661394913991296;
+      scale_factor = 0.98656443565772689;
     if(-0.8<eta && eta<0.0) 
-      scale_factor = 0.970484183894263386;
+      scale_factor = 0.970503392911141849;
     if(0.0<eta && eta<0.8) 
-      scale_factor = 0.979886399375067829;
+      scale_factor = 0.97992861001469711;
     if(0.8<eta && eta<1.444) 
-      scale_factor = 0.98747599787182283;
+      scale_factor = 0.987459688443958483;
     if(1.444<eta && eta<1.566) 
-      scale_factor = 1;
+      scale_factor = 0.999999999972440934;
     if(1.566<eta && eta<2.0) 
-      scale_factor = 1.0015653106901381;
+      scale_factor = 1.00143802358074008;
     if(2.0<eta && eta<2.4) 
-      scale_factor = 0.997389793395996094;
+      scale_factor = 0.997267106262170855;
   }
 
   if(100<pt && pt<1000){
     if(-2.4<eta && eta<-2.1) 
-      scale_factor = 1.02094837029774976;
+      scale_factor = 1.02102928968608131;
     if(-2.1<eta && eta<-1.566) 
-      scale_factor = 1.02457796202765561;
+      scale_factor = 1.0245783643881643;
     if(-1.566<eta && eta<-1.444) 
-      scale_factor = 1;
+      scale_factor = 0.999999999972440934;
     if(-1.444<eta && eta<-0.8) 
-      scale_factor = 1.00173119703928637;
+      scale_factor = 1.0017229432416741;
     if(-0.8<eta && eta<0.0) 
-      scale_factor = 0.995304425557454464;
+      scale_factor = 0.995409713469230795;
     if(0.0<eta && eta<0.8) 
-      scale_factor = 1.0050323406855266;
+      scale_factor = 1.00509694107217928;
     if(0.8<eta && eta<1.444) 
-      scale_factor = 1.0106508731842041;
+      scale_factor = 1.01064288386311341;
     if(1.444<eta && eta<1.566) 
-      scale_factor = 1;
+      scale_factor = 0.999999999972440934;
     if(1.566<eta && eta<2.0) 
-      scale_factor = 0.992624911997053383;
+      scale_factor = 0.992650014568215555;
     if(2.0<eta && eta<2.4) 
-      scale_factor = 1.02222976419660783;
+      scale_factor = 1.02202593462974223;
   }
   return scale_factor;
     

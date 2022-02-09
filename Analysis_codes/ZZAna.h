@@ -1707,7 +1707,7 @@ public:
     TH1F *dR[50];
     TH1F *analysis[50];
     TH1F *ZZ_mu_h[4][9];
-    TH1F *ZZ_emu_h[4][9];
+    TH1F *ZZ_emu_h[4][13];
     TH1F *ZZ_e_h[4][9];
     TH1F *weights[50];
   };
